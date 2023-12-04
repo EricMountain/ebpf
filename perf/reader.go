@@ -14,6 +14,13 @@ import (
 	"github.com/cilium/ebpf/internal"
 	"github.com/cilium/ebpf/internal/epoll"
 	"github.com/cilium/ebpf/internal/unix"
+
+	"github.com/cilium/cilium/pkg/logging"
+	"github.com/cilium/cilium/pkg/logging/logfields"
+)
+
+var (
+	log = logging.DefaultLogger.WithField(logfields.LogSubsys, "ebpf")
 )
 
 var (
@@ -325,6 +332,7 @@ func (pr *Reader) SetDeadline(t time.Time) {
 func (pr *Reader) Read() (Record, error) {
 	var r Record
 
+	log.Info("Invoking ReadInto()")
 	return r, pr.ReadInto(&r)
 }
 
