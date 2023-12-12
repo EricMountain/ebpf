@@ -389,9 +389,12 @@ func (pr *Reader) ReadInto(rec *Record) error {
 		if len(pr.epollRings) == 0 {
 			// NB: The deferred pauseMu.Unlock will panic if Wait panics, which
 			// might obscure the original panic.
+			pDebug("ReadInto: Wait: pr.deadline = %v\n", pr.deadline)
 			pr.pauseMu.Unlock()
+			// is pr.deadline == 0? That should lead to an indefinite wait
 			nEvents, err := pr.poller.Wait(pr.epollEvents, pr.deadline)
 			pr.pauseMu.Lock()
+			pDebug("ReadInto: Wait: nEvents = %d, err = %v\n", nEvents, err)
 			if err != nil {
 				return err
 			}
